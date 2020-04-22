@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<link rel="stylesheet" href="csl.css" title="css">
+<link rel="alternate stylesheet" type="text/css" href="csl-alt.css" title="altcss">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadet Service Learning Program</title>
+</head>
+
+<body>
+
+  <header>
+    <img src="csl-logo.jpg" alt="Cadet Service Learning Logo - Two hands shaking with a 17 spire chapel behind and a falcon flying above" />
+    <h2>Cadet Service Learning Program</h2>
+  </header>
+
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="partners.html">Partners</a></li>
+    <li><a class="active" href="volunteer.html">Volunteer Info</a></li>
+  </ul>
+
+  <div class="container">
+  <form action="demo.php" name ="volunteerform" id="volunteerform" onsubmit="return validate()" method="post">
+  <div class="row">
+    <div class="col-25">
+      <label for="firstName">First Name</label>
+    </div>
+    <div class="col-75">
+      <input type="text" id="firstName" name="firstName" placeholder="Your first name.." required>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-25">
+      <label for="lastName">Last Name</label>
+    </div>
+    <div class="col-75">
+      <input type="text" id="lastName" name="lastName" placeholder="Your last name.." required>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-25">
+      <label for="emailAddress">Email Address</label>
+    </div>
+    <div class="col-75">
+      <input type="text" id="emailAddress" name="emailAddress" placeholder="Your email.." required>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-25">
+      <label for="age">Age</label>
+    </div>
+    <div class="col-75">
+      <input type="number" id="age" name="age" min="17" max="29" placeholder="Your age.." required>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-25">
+      <label for="gender">Gender</label>
+    </div>
+    <div class="col-75">
+      <input type="radio" id="gender" name="gender" value="male">
+      <label for="male">Male</label><br>
+      <input type="radio" id="female" name="gender" value="female">
+       <label for="female">Female</label><br>
+      </select>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-25">
+      <label for="carAccess">Car Access</label>
+    </div>
+    <div class="col-75">
+      <input type="radio" id="carAccess" name="carAccess" value="False">
+      <label for="False">False</label><br>
+      <input type="radio" id="female" name="gender" value="female">
+       <label for="True">True</label><br>
+      </select>
+    </div>
+  </div>
+  
+  <div class="row">
+    <input type="submit" value="Submit">
+  </div>
+  </form>
+</div>
+
+<script>
+function validate(){
+  var letters = /^[A-Za-z -]+$/;
+  var emailregex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  var x = document.forms["volunteerform"]["firstName"].value;
+  if (x == "" || !(letters.test(x)) || (x.length) > 50) {
+    return false;
+  }
+  x =  document.forms["volunteerform"]["lastName"].value;
+  if (x == "" || !(letters.test(x)) || (x.length) > 50) {
+  return false;
+  }
+  x =  document.forms["volunteerform"]["emailAddress"].value;
+  if (x == "" || (x.length) > 50 || !(emailregex.test(x))) { /* https://html.spec.whatwg.org/multipage/input.html#e-mail-state-(type=email) for email regex */
+    return false;
+  }
+  x =  document.forms["volunteerform"]["age"].value;
+  if (x == "" || x < 17 || x > 29) {
+    return false;
+  }
+  x =  document.forms["volunteerform"]["gender"].value;
+  if (x == "") {
+    return false;
+  }
+  x =  document.forms["volunteerform"]["carAccess"].value;
+  if (x == "") {
+    return false;
+  }
+}
+</script>
+
+  <footer>
+    <script src="script.js"></script>
+	<a href="https://usafa-compsci364.github.io/Spring2020/assignments/web-development.html">Web Development Assignment</a>
+  </footer>
+ 
+</body>
+</html>
