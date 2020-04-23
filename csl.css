@@ -25,8 +25,7 @@ headertext {
   color: white;
 }
 
-.header img {
-  float: left;
+img.resize{
   width: 100px;
   height: 100px;
   background: #555;
