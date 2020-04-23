@@ -20,39 +20,78 @@
     <li><a href="newWorkout.html">New Workout</a></li>
   </ul>
 
-  <h2 align="center">Partners of the Cadet Service Learning Program</h2>
-  <table style="width:100%">
-    <tr>
-      <th style ="text-align: left">Name</th>
-      <th style ="text-align: left">Location</th>
-      <th style ="text-align: left">Phone</th>
-    </tr>
-    <tr>
-      <td style ="text-align: left"><a href="https://pikespeakhabitat.org/">Habitat for Humanity</a></td>
-      <td style ="text-align: left">2802 N. Prospect St., Colorado Springs, CO 80907</td>
-      <td style ="text-align: left">(719) 475-7800</td>
-    </tr>
-    <tr>
-      <td style ="text-align: left"><a href="https://coloradosprings.salvationarmy.org/">Salvation Army Soup Kitchen</a></td>
-      <td style ="text-align: left">908 Yuma St., Colorado Springs, CO 80909</td>
-      <td style ="text-align: left">(719) 636-3891</td>
-    </tr>
-    <tr>
-      <td style ="text-align: left"><a href="https://pikespeakhabitat.org/">Big Brothers Big Sisters of Colorado</a></td>
-      <td style ="text-align: left">111 S. Tejon St., Suite 302, Colorado Springs, CO 80903</td>
-      <td style ="text-align: left">(719) 633-2443</td>
-    </tr>
-    <tr>
-      <td style ="text-align: left"><a href="http://www.keepcoloradospringsbeautiful.org/">Keep Colorado Springs Beautiful Inc.</a></td>
-      <td style ="text-align: left">20 E. Rio Grande St., Colorado Springs, CO 80903</td>
-      <td style ="text-align: left">(719) 577-9111</td>
-    </tr>
-  </table> 
+  <div class="container">
+  <form name ="workoutLocator" id="workoutLocator">
+  <div class="row">
+    <div class="col-25">
+      <label for="startDate">Start Date</label>
+    </div>
+    <div class="col-75">
+      <input type="date" id="startDate" name="startDate" placeholder="Enter a start date.." required>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-25">
+      <label for="endDate">End Date</label>
+    </div>
+    <div class="col-75">
+      <input type="date" id="endDate" name="endDate" placeholder="Enter a start date.." required>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-25">
+      <label for="workoutType">Workout Type</label>
+    </div>
+    <div class="col-75">
+			 <select id="workoutType">
+				<option value="Cycling">Cycling</option>
+				<option value="Running">Running</option>
+			 </select>	
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-25">
+      <label for="userNum">userNum</label>
+    </div>
+    <div class="col-75">
+      <input type="number" id="userNum" name="userNum" placeholder="User ID#" required>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-25">
+      <label for="distance">Distance</label>
+    </div>
+    <div class="col-75">
+			<select id="equalitySymbolDistance">
+				<option value="equalto">=</option>
+				<option value="greaterThan">≥</option>
+				<option value="lessThan">≤</option>
+			 </select>
+      <input type="number" id="distance" name="distance" step= "0.01" placeholder="Distance" required>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-25">
+      <label for="duration">Duration</label>
+    </div>
+    <div class="col-75">
+			<select id="equalitySymbolTime">
+				<option value="equalto">=</option>
+				<option value="greaterThan">≥</option>
+				<option value="lessThan">≤</option>
+			 </select>
+      <input type="number" id="duration" name="duration" placeholder="Duration of Workout" required>
+    </div>
+  </div>
+  <div class="row">
+    <input type="submit" value="Submit">
+  </div>
+  </form>
+</div>
 
   <footer>
-    <script src="script.js"></script>
-	<button class="button" onclick="toggleCSS()">Change CSS</button>
-    <a href="https://usafa-compsci364.github.io/Spring2020/assignments/web-development.html">Web Development Assignment</a>
+	<script src="script.js"></script>
+    <a href="https://usafa-compsci364.github.io/Spring2020/assignments/project/website.html">Project Webpage Assignment</a>
   </footer>
 
 </body>
