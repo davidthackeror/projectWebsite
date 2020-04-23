@@ -259,6 +259,13 @@ input[type=submit]:hover {
   clear: both;
 }
 
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
 /* end style for the form */
 
 /* Responsive layout - makes the two columns/boxes stack on top of each other instead of next to each other, on small screens */
