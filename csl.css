@@ -212,7 +212,7 @@ input[type=number], select, textarea {
 }
 
 input[type=number]:focus {
-  width: 100%
+  width: 60%
 }
 
 label {
@@ -221,7 +221,7 @@ label {
 }
 
 input[type=submit] {
-  background-color: #002366;
+  background-color: rgb(251, 82, 0);
   color: white;
   padding: 12px 20px;
   border: none;
@@ -232,6 +232,8 @@ input[type=submit] {
 
 input[type=submit]:hover {
   background-color: #9b1c31;
+  animation-name: jackInTheBox
+
 }
 
 .container {
