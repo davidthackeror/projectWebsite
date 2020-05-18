@@ -2,7 +2,7 @@
 <html lang="en-US">
 <head>
   <meta charset="UTF-8">
-    <link rel="stylesheet" href="csl.css" title="css">
+    <link rel="stylesheet" href="styles.css" title="css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
   <title>Cerulean Connect</title>
 </head>
@@ -20,7 +20,7 @@
     <li><a href="newWorkout.html">New Workout</a></li>
   </ul>
   <div class="container">
-  <form name ="workoutLocator" id="workoutLocator">
+  <form name ="workoutLocator" id="workoutLocator" method="post" action="workout.php">
   	<h2 align="center" class="animated lightSpeedIn slow">Find Workouts</h2>
 
   <div class="row">
@@ -44,7 +44,7 @@
       <label for="workoutType">Workout Type</label>
     </div>
     <div class="col-75">
-			 <select id="workoutType">
+			 <select id="workoutType" name="workoutType">
 				<option value="Cycling">Cycling</option>
 				<option value="Running">Running</option>
 			 </select>	
@@ -52,7 +52,7 @@
   </div>
   <div class="row">
     <div class="col-25">
-      <label for="userNum">UserID#</label>
+      <label for="userNum">userNum</label>
     </div>
     <div class="col-75">
       <input type="number" id="userNum" name="userNum" placeholder="User ID#" >
@@ -63,7 +63,7 @@
       <label for="distance">Distance</label>
     </div>
     <div class="col-75">
-			<select id="equalitySymbolDistance">
+			<select id="equalitySymbolDistance" name="equalitySymbolDistance">
 				<option value="equalto">=</option>
 				<option value="greaterThan">≥</option>
 				<option value="lessThan">≤</option>
@@ -76,7 +76,7 @@
       <label for="duration">Duration</label>
     </div>
     <div class="col-75">
-			<select id="equalitySymbolTime">
+			<select id="equalitySymbolTime" name="equalitySymbolTime">
 				<option value="equalto">=</option>
 				<option value="greaterThan">≥</option>
 				<option value="lessThan">≤</option>
