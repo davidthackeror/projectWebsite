@@ -36,54 +36,59 @@
      	  echo pg_last_error($dbconn);
      	  exit;
      	}
-	$equalitySymbolDistance = $_REQUEST['equalitySymbolDistance'];
-	$equalitySymbolTime = $_REQUEST['equalitySymbolTime'];
 
-	if($equalitySymbolDistance === 'greaterThan'){
-		$equalitySymbolDistance = '>';
-	}
-	else if($equalitySymbolDistance === 'lessThan'){
-		$equalitySymbolDistance = '<';
-	}
+	$id = $_REQUEST["userNum"];
+	$idStr = "users.userid =";
+	$idSpec = FALSE;
+	if(!$id){ $idStr = "$1 = $1";}
+	else{$idStr = "users.userid = $1"; $idSpec = TRUE;}
+
+	$distance = $_REQUEST["distance"];
+	$distStr = "";
+	if(!$distance){ $distStr = "$2 = $2";}
 	else{
-		$equalitySymbolDistance = '=';
+		$distSym = $_REQUEST["equalitySymbolDistance"];
+		if($distSym === "lessThan"){$distStr = "distance <= $2";}
+		else{
+			if($distSym === "greaterThan"){$distStr = "distance >= $2";}else{$distStr = "distance = $2";}
+		}
+
 	}
 
-	if($equalitySymbolTime === 'greaterThan'){
-		$equalitySymbolTime = 'duration >';
-	}
-	else if($equalitySymbolTime === 'lessThan'){
-		$equalitySymbolTime = 'duration <';
-	}
+	$duration = $_REQUEST["duration"];
+	$duraStr = "";
+	if(!$duration){ $duraStr = "$3 = $3";}
 	else{
-		$equalitySymbolTime = 'duration';
+		$duraSym = $_REQUEST["equalitySymbolTime"];
+		if($duraSym === "lessThan"){$duraStr = "duration <= $3";}
+		else{
+			if($duraSym === "greaterThan"){$duraStr = "duration >= $3";}else{$duraStr = "duration = $3";}
+		}
+
 	}
-
-	$id = '$_REQUEST["userNum"]';
-	if(!$id){$id = "users.userid";}
-
-	$sdate = $_REQUEST['startDate'];
-	if(DateTime::createFromFormat('YYYY-mm-dd', $sdate)){$sdate = "dateperformed";}
-
-	$edate = $_REQUEST['endDate'];
-	if(DateTime::createFromFormat('YYYY-mm-dd', $e)){$edate = "dateperformed";}
 
 	$wtype = $_REQUEST['workoutType'];
-	if(!$wtype){$wtype = "activitytype";}
+	$wStr = "";
+	if(!$wtype){ $wStr = "$4 = $4";}
+	else{$wStr = "activitytype = $4";}
 
-	$distance = $_REQUEST['distance'];
-	if(!$distance){$distance = "distance";}
 
-	$duration = $_REQUEST['duration'];
-	if(!$duration){$duration = "duration";}
+	$sdate = $_REQUEST['startDate'];
+	$sdateStr = "";
+	if(!$sdate){$sdateStr = "$5 = $5";}else{$sdateStr = "dateperformed >= $5";}
+	
+	$edate = $_REQUEST['endDate'];
+	$edateStr = "";
+	if(!$edate){$edateStr = "$6 = $6";}else{$edateStr = "dateperformed <= $6";}
 
 	$result = pg_prepare($conn, "workoutQuery", 'SELECT users.userid, lastname, firstname, activitytype, dateperformed, distance, duration, avghr, maxhr
 		FROM workouts join users 
 		ON workouts.userid = users.userid
-		WHERE users.userid = $1 AND dateperformed >= $2 AND dateperformed <= $3 AND activitytype = $4 AND $5=$6 AND $7=$8
+		WHERE ' .$idStr.' AND '.$distStr.' AND '.$duraStr.' AND '.$wStr.' AND '.$sdateStr.' AND '.$edateStr.' 
 		ORDER BY dateperformed DESC, users.userid ASC, lastname ASC, firstname ASC;');
 
-	$result = pg_execute($conn, "workoutQuery", array("$id", $sdate, $edate, $wtype, $equalitySymbolDistance, $distance, $equalitySymbolTime, $duration));
+	$result = pg_execute($conn, "workoutQuery", array($_REQUEST['userNum'], $_REQUEST['distance'], $_REQUEST['duration'], $_REQUEST['workoutType'], $_REQUEST['startDate'], $_REQUEST['endDate']));
+	echo "Showing results for userid:\"".$_REQUEST['userNum']."\", distance:\"".$_REQUEST['distance']."\", duration:\"".$_REQUEST['duration']."\", activity:\"".$_REQUEST['workoutType']."\", startdate:\"".$_REQUEST['startDate']."\", enddate:\"".$_REQUEST['endDate']."\"";
 	$row = pg_fetch_row($result);
 	$counter = 0;
 	$row = NULL;
@@ -92,6 +97,11 @@
 	echo "<table cellpadding=\"3\" border=\"1\">";
 	echo "<tbody>";
 	echo "<tr>";
+		if(!$idSpec){
+			echo '<th>User Num</th>';
+			echo '<th>Last Name</th>';
+			echo '<th>First name</th>';
+		}
 		echo "<th>Activity</th>";
 		echo "<th>Date Performed</th>";
 		echo "<th>Distance</th>";
@@ -102,6 +112,11 @@
 	$row = NULL;
 	while($row = pg_fetch_array($result)){
 		echo "<tr>";
+			if(!$idSpec){
+				echo '<td>'.$row["userid"].'</td>';
+				echo '<td>'.$row["lastname"].'</td>';
+				echo '<td>'.$row["firstname"].'</td>';
+			}
 			$lname = '.$row["lastname"].';
 			$fname = '.$row["firstname"].';
 			echo '<td>'.$row["activitytype"].'</td>';
