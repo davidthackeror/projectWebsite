@@ -28,55 +28,98 @@
    <center>
 
      <?php // Connect to the database
-     $db = new mysqli('localhost', 'student', 'CompSci364', 'Security');
-     if (mysqli_connect_errno())
-     {
-       echo 'ERROR: Could not connect to database, error is '.mysqli_connect_error();
-       exit;
-     }
-	$db->close();    // close the database connection this wont actually be here
-	 // Get the original data passed to us
-	 $startDate = $_REQUEST['startDate'];
-	 $endDate = $_REQUEST['endDate'];
-	 $workoutType = $_REQUEST['workoutType'];
-	 $userNum = $_REQUEST['userNum'];
-	 $distance = $_REQUEST['distance'];
-	 $equalitySymbolDistance = $_REQUEST['equalitySymbolDistance'];
-	 $duration = $_REQUEST['duration'];
-	 $equalitySymbolTime = $_REQUEST['equalitySymbolTime'];
+     	$conn = pg_connect("host=localhost port=5432 dbname=CeruleanConnect user=student password=CompSci364") 
+		or die("Could not connect");
+     	$status = pg_connection_status($conn);
+     	if ($status !== PGSQL_CONNECTION_OK)
+     	{
+     	  echo pg_last_error($dbconn);
+     	  exit;
+     	}
+	$equalitySymbolDistance = $_REQUEST['equalitySymbolDistance'];
+	$equalitySymbolTime = $_REQUEST['equalitySymbolTime'];
+
+	if($equalitySymbolDistance === 'greaterThan'){
+		$equalitySymbolDistance = '>';
+	}
+	else if($equalitySymbolDistance === 'lessThan'){
+		$equalitySymbolDistance = '<';
+	}
+	else{
+		$equalitySymbolDistance = '=';
+	}
+
+	if($equalitySymbolTime === 'greaterThan'){
+		$equalitySymbolTime = 'duration >';
+	}
+	else if($equalitySymbolTime === 'lessThan'){
+		$equalitySymbolTime = 'duration <';
+	}
+	else{
+		$equalitySymbolTime = 'duration';
+	}
+
+	$id = '$_REQUEST["userNum"]';
+	if(!$id){$id = "users.userid";}
+
+	$sdate = $_REQUEST['startDate'];
+	if(DateTime::createFromFormat('YYYY-mm-dd', $sdate)){$sdate = "dateperformed";}
+
+	$edate = $_REQUEST['endDate'];
+	if(DateTime::createFromFormat('YYYY-mm-dd', $e)){$edate = "dateperformed";}
+
+	$wtype = $_REQUEST['workoutType'];
+	if(!$wtype){$wtype = "activitytype";}
+
+	$distance = $_REQUEST['distance'];
+	if(!$distance){$distance = "distance";}
+
+	$duration = $_REQUEST['duration'];
+	if(!$duration){$duration = "duration";}
+
+	$result = pg_prepare($conn, "workoutQuery", 'SELECT users.userid, lastname, firstname, activitytype, dateperformed, distance, duration, avghr, maxhr
+		FROM workouts join users 
+		ON workouts.userid = users.userid
+		WHERE users.userid = $1 AND dateperformed >= $2 AND dateperformed <= $3 AND activitytype = $4 AND $5=$6 AND $7=$8
+		ORDER BY dateperformed DESC, users.userid ASC, lastname ASC, firstname ASC;');
+
+	$result = pg_execute($conn, "workoutQuery", array("$id", $sdate, $edate, $wtype, $equalitySymbolDistance, $distance, $equalitySymbolTime, $duration));
+	$row = pg_fetch_row($result);
+	$counter = 0;
+	$row = NULL;
+	$fname = NULL;
+	$lname = NULL;
+	echo "<table cellpadding=\"3\" border=\"1\">";
+	echo "<tbody>";
+	echo "<tr>";
+		echo "<th>Activity</th>";
+		echo "<th>Date Performed</th>";
+		echo "<th>Distance</th>";
+		echo "<th>Duration</th>";
+		echo "<th>Average Heart Rate</th>";
+		echo "<th>Max Heart Rate</th>";
+	echo "</tr>";
+	$row = NULL;
+	while($row = pg_fetch_array($result)){
+		echo "<tr>";
+			$lname = '.$row["lastname"].';
+			$fname = '.$row["firstname"].';
+			echo '<td>'.$row["activitytype"].'</td>';
+			echo '<td>'.$row["dateperformed"].'</td>';
+			echo '<td>'.$row["distance"].'</td>';
+			echo '<td>'.$row["duration"].'</td>';
+			echo '<td>'.$row["avghr"].'</td>';
+			echo '<td>'.$row["maxhr"].'</td>';
+		echo "</tr>";
+	}
+	echo "</tbody>";
+	echo "</table>";
+	
+	pg_close($conn);    // close the database connection this wont actually be here
+	 
 
 
      ?>
-     <table border="1" cellpadding="3">
-       <tr><th>Result</th><th>Value</th></tr>
-	   <?php 	 if (isset($_REQUEST['startDate'])) { ?>
-               <tr><td>Start Date</td><td><?php echo $startDate; ?></td></tr>
-	   <?php } ?>
-	   <?php 	 if (isset($_REQUEST['endDate'])) { ?>
-               <tr><td>End Date</td><td><?php echo $endDate; ?></td></tr>
-	   <?php } ?>
- 	   <?php 	 if (isset($_REQUEST['workoutType'])) { ?>
-               <tr><td>Workout Type</td><td><?php echo $workoutType; ?></td></tr>
-	   <?php } ?>
-	   <?php 	 if (isset($_REQUEST['userNum'])) { ?>
-               <tr><td>User</td><td><?php echo $userNum; ?></td></tr>
-	   <?php } ?>
-	   <?php 	 if (isset($_REQUEST['distance'])) { ?>
-               <tr><td>Distance</td><td><?php echo $distance; ?></td></tr>
-	   <?php } ?>
-	   <?php 	 if (isset($_REQUEST['equalitySymbolDistance'])) { ?>
-               <tr><td>Distance Symbol</td><td><?php echo $equalitySymbolDistance; ?></td></tr>
-	   <?php } ?>
-           <?php 	 if (isset($_REQUEST['duration'])) { ?>
-               <tr><td>Duration</td><td><?php echo $duration; ?></td></tr>
-	   <?php } ?>
-	   <?php 	 if (isset($_REQUEST['equalitySymbolTime'])) { ?>
-               <tr><td>Time Symbol</td><td><?php echo $equalitySymbolTime; ?></td></tr>
-	   <?php } ?>
-     </table>
-
-	<?php //figure out what the required fields are... have a javascript check to validate
-?>
 
 	<a href="workoutRepository.html">Back to Form</a>
    </container>
