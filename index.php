@@ -1,4 +1,3 @@
-<?php echo "300 Miles";?>
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
@@ -67,8 +66,6 @@
 		}
 		$row = NULL;
 			while($row = pg_fetch_array($result)){
-echo $curDate."<br>";
-echo $row["dateperformed"]."<br>";
 				$daysActive = $daysActive + 1; 
 				$temp = date_sub($temp, date_interval_create_from_date_string('1 day'));
 				$curDate = date_format($temp, "Y-m-d");
