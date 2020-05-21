@@ -28,51 +28,71 @@
    <center>
 
      <?php // Connect to the database
-     $db = new mysqli('localhost', 'student', 'CompSci364', 'Security');
-     if (mysqli_connect_errno())
-     {
-       echo 'ERROR: Could not connect to database, error is '.mysqli_connect_error();
-       exit;
-     }
-	$db->close();    // close the database connection this wont actually be here
-	 // Get the original data passed to us
-	$userNum = $_REQUEST['userNum'];
-	 $workoutType = $_REQUEST['workoutType'];
-	 $distance = $_REQUEST['distance'];
-	 $duration = $_REQUEST['duration'];
-	 $maxHR = $_REQUEST['maxHR'];
-	 $minHR = $_REQUEST['minHR'];
-	 $avgHR = $_REQUEST['avgHR'];
+     	$id = $_REQUEST["userNum"];
+	$idSpec = FALSE;
+	if($id){$idSpec = TRUE;}
+
+	$distance = $_REQUEST["distance"];
+	$distSpec = FALSE;
+	if($distance){ $distSpec = TRUE;}
+
+	$duration = $_REQUEST["duration"];
+	$duraSpec = FALSE;
+	if($duration){ $duraSpec = TRUE;}
+
+	$wtype = $_REQUEST['workoutType'];
+	$wSpec = FALSE;
+	if($wtype){ $wSpec = TRUE;}
+	
+	$maxHR = $_REQUEST['maxHR'];
+	if(!$maxHR){ $maxHR = NULL;}
+	
+	$avgHR = $_REQUEST['avgHR'];
+	if(!$avgHR){ $avgHR = NULL;}
+
+	$date = date('Y-m-d H:i:s');
+
+	if($idSpec && $distSpec && $duraSpec && $wSpec){
+		$conn = pg_connect("host=localhost port=5432 dbname=CeruleanConnect user=student password=CompSci364") 
+			or die("Could not connect");
+	     	$status = pg_connection_status($conn);
+	     	if ($status !== PGSQL_CONNECTION_OK)
+	     	{
+	     	  echo pg_last_error($dbconn);
+	     	  exit;
+	     	}
 
 
+		//get next workoutid
+		$workoutid = -1;
+		$t = pg_query($conn, "SELECT MAX(workoutid) FROM workouts;");
+		$workoutid = pg_fetch_result($t, 0, 0);
+		if($workoutid === -1){
+			echo "Could not connect to database";	
+		}
+		$workoutid += 1;
+
+		$result = pg_prepare($conn, "addWorkoutQuery", 'INSERT INTO workouts (workoutid, userid, activitytype, dateperformed, 
+			distance, duration, avghr, maxhr) VALUES($1, $2, $3, $4, $5, $6, $7, $8);');	
+		$result = pg_execute($conn, "addWorkoutQuery", array($workoutid, $id, $wtype, $date, $distance, $duration, $avgHR, $maxHR));
+		echo "Added new entry! Thanks for working out with Cerulean Connect";
+		pg_close($conn);    // close the database
+	}else{
+		echo "Missing required fields!";
+	}
+
+	
      ?>
+	<h2>Latest Entry:</h2>
      <table border="1" cellpadding="3">
        <tr><th>Result</th><th>Value</th></tr>
-	   <?php 	 if (isset($_REQUEST['userNum'])) { ?>
-               <tr><td>userNum</td><td><?php echo $userNum; ?></td></tr>
-	   <?php } ?>
- 	   <?php 	 if (isset($_REQUEST['workoutType'])) { ?>
-               <tr><td>Workout Type</td><td><?php echo $workoutType; ?></td></tr>
-	   <?php } ?>
-	   <?php 	 if (isset($_REQUEST['distance'])) { ?>
+               <tr><td>userNum</td><td><?php echo $id; ?></td></tr>
+               <tr><td>Workout Type</td><td><?php echo $wtype; ?></td></tr>
                <tr><td>Distance</td><td><?php echo $distance; ?></td></tr>
-	   <?php } ?>
-           <?php 	 if (isset($_REQUEST['duration'])) { ?>
                <tr><td>Duration</td><td><?php echo $duration; ?></td></tr>
-	   <?php } ?>
-	   <?php 	 if (isset($_REQUEST['maxHR'])) { ?>
                <tr><td>Max HR</td><td><?php echo $maxHR; ?></td></tr>
-	   <?php } ?>
-	   <?php 	 if (isset($_REQUEST['minHR'])) { ?>
-               <tr><td>Min HR</td><td><?php echo $minHR; ?></td></tr>
-	   <?php } ?>
-	   <?php 	 if (isset($_REQUEST['avgHR'])) { ?>
                <tr><td>Avg HR</td><td><?php echo $avgHR; ?></td></tr>
-	   <?php } ?>
      </table>
-
-	<?php //figure out what the required fields are... have a javascript check to validate
-?>
 
 	<a href="newWorkout.html">Back to Form</a>
    </container>

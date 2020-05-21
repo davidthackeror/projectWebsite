@@ -67,7 +67,7 @@
 		$row = NULL;
 			while($row = pg_fetch_array($result)){
 				$daysActive = $daysActive + 1; 
-				$temp = date_sub($temp, date_interval_create_from_date_string('1 day'));
+				$temp = date_sub(DateTime::createFromFormat('Y-m-d', $curDate), date_interval_create_from_date_string('1 day'));
 				$curDate = date_format($temp, "Y-m-d");
 				$exists = 1;
 				
