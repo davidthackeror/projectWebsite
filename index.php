@@ -55,7 +55,7 @@
 	$curDate = strval($temp);
 	$exists = 1;
 	$daysActive = 0;
-	$result = pg_prepare($conn, "dateC", 'SELECT CAST(dateperformed AS date) FROM workouts WHERE CAST(dateperformed AS date) = $1 ORDER BY dateperformed');
+	$result = pg_prepare($conn, "dateC", 'SELECT DISTINCT CAST(dateperformed AS date) FROM workouts WHERE CAST(dateperformed AS date) = $1 ORDER BY dateperformed');
 	while($exists > 0){	
 		$exists = 0;
 		$result = pg_execute($conn, "dateC", array($curDate));
