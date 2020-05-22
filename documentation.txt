@@ -1,0 +1,1 @@
+This website walked me through how to generate a graph using SQl: https://dzone.com/articles/creating-dynamic-charts-with-php-and-postgresql
