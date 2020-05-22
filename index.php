@@ -106,7 +106,7 @@
   <hr/>
   	<?php
 	// including FusionCharts PHP wrapper
-	include("/home/davidthackeror/Desktop/fusioncharts.php");
+	include("./fusioncharts.php");
 
 	// establishing DB connection
 	$host= "host=localhost";
