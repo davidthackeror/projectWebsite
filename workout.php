@@ -38,9 +38,9 @@
      	}
 
 	$id = $_REQUEST["userNum"];
-	$idStr = "users.userid =";
+	$idStr = "";
 	$idSpec = FALSE;
-	if(!$id){ $idStr = "$1 = $1";}
+	if(!is_numeric($id)){ $idStr = "$1 = $1";}
 	else{$idStr = "users.userid = $1"; $idSpec = TRUE;}
 
 	$distance = $_REQUEST["distance"];
@@ -84,12 +84,12 @@
 	$result = pg_prepare($conn, "workoutQuery", 'SELECT users.userid, lastname, firstname, activitytype, dateperformed, distance, duration, avghr, maxhr
 		FROM workouts join users 
 		ON workouts.userid = users.userid
-		WHERE ' .$idStr.' AND '.$distStr.' AND '.$duraStr.' AND '.$wStr.' AND '.$sdateStr.' AND '.$edateStr.' 
+		WHERE '.$idStr.' AND '.$distStr.' AND '.$duraStr.' AND '.$wStr.' AND '.$sdateStr.' AND '.$edateStr.' 
 		ORDER BY dateperformed DESC, users.userid ASC, lastname ASC, firstname ASC;');
 
 	$result = pg_execute($conn, "workoutQuery", array($_REQUEST['userNum'], $_REQUEST['distance'], $_REQUEST['duration'], $_REQUEST['workoutType'], $_REQUEST['startDate'], $_REQUEST['endDate']));
 	echo "Showing results for userid:\"".$_REQUEST['userNum']."\", distance:\"".$_REQUEST['distance']."\", duration:\"".$_REQUEST['duration']."\", activity:\"".$_REQUEST['workoutType']."\", startdate:\"".$_REQUEST['startDate']."\", enddate:\"".$_REQUEST['endDate']."\"";
-	$row = pg_fetch_row($result);
+
 	$counter = 0;
 	$row = NULL;
 	$fname = NULL;
@@ -109,8 +109,8 @@
 		echo "<th>Average Heart Rate</th>";
 		echo "<th>Max Heart Rate</th>";
 	echo "</tr>";
-	$row = NULL;
-	while($row = pg_fetch_array($result)){
+	$row = pg_fetch_array($result);
+	while($row != NULL){
 		echo "<tr>";
 			if(!$idSpec){
 				echo '<td>'.$row["userid"].'</td>';
@@ -126,6 +126,7 @@
 			echo '<td>'.$row["avghr"].'</td>';
 			echo '<td>'.$row["maxhr"].'</td>';
 		echo "</tr>";
+		$row = pg_fetch_array($result);
 	}
 	echo "</tbody>";
 	echo "</table>";
