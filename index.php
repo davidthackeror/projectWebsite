@@ -129,7 +129,16 @@
 
 <?php
 	
-	$result = pg_query($dbconn, "SELECT userid, SUM(distance) from workouts GROUP BY userid");
+	$result = pg_query($dbconn, "SELECT 
+  users.firstname, 
+  SUM(workouts.distance) as \"quotes\"
+FROM 
+  public.users, 
+  public.workouts
+WHERE 
+  users.userid = workouts.userid
+GROUP BY users.firstname
+ORDER BY quotes;");
 	if (!$result) {
 	  echo "An error occurred.\n";
 	  exit;
@@ -145,6 +154,8 @@
           	// caption and sub-caption customization
             "caption"=> "Total Milage per User",
           	"captionFontSize"=> "24",
+		"xAxisName"=> "User ID",
+            "yAxisName"=> "Distance (In Miles)",	
             "captionFontColor"=> "#4D394B",
             "captionPadding"=> "20",
 
@@ -177,7 +188,7 @@
 
             // other customizations
             "theme"=> "fint",
-            "paletteColors"=> "#7B5A85",
+            "paletteColors"=> "#666666",
             "showBorder"=> "0",
       			"bgColor"=> "#FFFFFF",
             "canvasBgColor"=> "#FFFFFF",
@@ -205,7 +216,7 @@
 
 
 	// creating FusionCharts instance
-	$postgresChart = new FusionCharts("column2d", "ActivityGraphChart" , '100%', '450', "postgres-chart", "json", $jsonEncodedData);
+	$postgresChart = new FusionCharts("column3d", "ActivityGraphChart" , '100%', '450', "postgres-chart", "json", $jsonEncodedData);
 
   // FusionCharts render method
   $postgresChart->render();

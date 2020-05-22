@@ -1,0 +1,3 @@
+This is a documentation statement.
+Josh learned PHP from this website: https://www.php.net/manual/en/langref.php, which assisted him in writing the queries and interacting with the DB
+David learned how to make graphs from https://dzone.com/articles/creating-dynamic-charts-with-php-and-postgresql, along with the official FusionCharts website
